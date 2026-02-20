@@ -1,6 +1,7 @@
 import express from 'express';
 import corsMiddleware from './config/cors'
 import { router } from './routes';
+import { errorHandler } from './middlewares/error.middleware';
 
 export function makeApp(){
     const app = express();
@@ -9,5 +10,6 @@ export function makeApp(){
     app.use(express.urlencoded({ extended: true }));
     app.use('/api', router);
     app.use((req, res) => {res.status(404).json({ message: 'Endpoint no encontrado' })});
+    app.use(errorHandler);
     return app;
 }
