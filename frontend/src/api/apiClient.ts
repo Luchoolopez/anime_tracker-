@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const resolveBaseUrl = () => {
     const env = import.meta.env.VITE_API_URL as string | undefined;
-    const defaultBase = 'http://localhost:3000';
+    const defaultBase = 'http://localhost:3001';
     const raw = env && env.length ? env : defaultBase;
     const normalized = raw.replace(/\/+$/, '');
     if (normalized.endsWith('/api')) return normalized;
