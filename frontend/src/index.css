@@ -1,5 +1,5 @@
 /* index.css (global) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;700&display=swap');
 * { box-sizing: border-box; margin: 0; padding: 0; }
-:root { font-family: Inter, system-ui, Arial, sans-serif; }
-body { min-width: 320px; min-height: 100vh; background: #f8f9fa; color: #212529; }
+body { min-width: 320px; min-height: 100vh; background: #f8f9fa; color: #212529; font-family: "Roboto Condensed", sans-serif; font-weight: 400; }
 a { text-decoration: none; color: inherit; }

@@ -9,12 +9,13 @@ export const Login = () => {
         password: ''
     });
 
+    const [isHovered, setIsHovered] = useState(false);
     const { login, loading, error, setError } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         return () => setError(null);
-    },[]);
+    }, []);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     }
@@ -34,22 +35,22 @@ export const Login = () => {
     }
 
     return (
-        <div className="d-flex flex-column justify-content-center align-items-center vh-100" style={{ backgroundColor: '#002349', fontFamily: 'sans-serif' }}>
-            
+        <div className="d-flex flex-column justify-content-center align-items-center vh-100 px-3" style={{ backgroundColor: '#002349', fontFamily: 'sans-serif' }}>
+
             <h1 className="text-center mb-2 fw-bold" style={{ fontSize: '2.5rem' }}>
                 <span style={{ color: '#ffffff' }}>Anime</span>
                 <span style={{ color: '#957C3D' }}>Tracker</span>
             </h1>
             <p className="text-center text-light mb-4">Bienvenido de nuevo</p>
 
-            <div className="w-100 p-4 rounded-4 shadow-lg" style={{
+            <div className="w-100 p-3 p-sm-4 rounded-4 shadow-lg" style={{
                 maxWidth: '420px',
                 backgroundColor: 'rgba(255, 255, 255, 0.04)', // Fondo translúcido sutil
                 border: '1px solid rgba(255, 255, 255, 0.1)'  // Borde para separar
             }}>
                 <form onSubmit={handleSubmit}>
                     {error && (<div className="alert alert-danger p-2 text-center">{error}</div>)}
-                    
+
                     <div className="mb-3">
                         <label htmlFor="email" className="text-white mb-1 fw-semibold" style={{ fontSize: '0.85rem' }}>Correo electrónico</label>
                         <input
@@ -60,7 +61,7 @@ export const Login = () => {
                             onChange={handleChange}
                             className="form-control text-white shadow-none"
                             style={{ backgroundColor: '#003366', border: 'none', padding: '12px' }}
-                            required 
+                            required
                         />
                     </div>
 
@@ -76,14 +77,21 @@ export const Login = () => {
                             onChange={handleChange}
                             className="form-control text-white shadow-none"
                             style={{ backgroundColor: '#003366', border: 'none', padding: '12px' }}
-                            required 
+                            required
                         />
                     </div>
 
                     <div className="d-grid mt-2 mb-3">
-                        <button 
-                            className="btn fw-bold" 
-                            style={{ backgroundColor: '#957C3D', color: '#002349', padding: '12px', borderRadius: '8px' }} 
+                        <button
+                            className="btn fw-bold"
+                            onMouseEnter={() => setIsHovered(true)}
+                            onMouseLeave={() => setIsHovered(false)}
+                            style={{
+                                backgroundColor: isHovered ? '#b8994a' :'#957C3D',
+                                color: '#002349',
+                                padding: '12px',
+                                borderRadius: '8px'
+                            }}
                             disabled={loading}
                         >
                             {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
