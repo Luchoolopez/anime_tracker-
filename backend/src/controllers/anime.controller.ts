@@ -6,17 +6,30 @@ export class AnimeController {
 
     createAnime = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { usuarioId, nombre, imagen, cantidadCapitulos } = req.body;
+            const { usuarioId, nombre, cantidadCapitulos } = req.body;
+            const file = req.file;
 
-            if(!usuarioId || !nombre || !cantidadCapitulos) throw new Error('UsuarioId, nombre y cantidadCapitulos son requeridos');
+            if(!usuarioId || !nombre || !cantidadCapitulos){
+                return res.status(400).json({
+                    success: false,
+                    message: 'usuarioId, nombre y cantidadCapitulos son campos requeridos'
+                });
+            };
+            if(!file){
+                return res.status(400).json({
+                    success: false,
+                    message: 'Imagen es un campo requerido'
+                });
+            }
             
-            const newAnime = await this.animeService.createAnime(usuarioId, nombre, imagen, cantidadCapitulos);
+            const newAnime = await this.animeService.createAnime(usuarioId, nombre, file, cantidadCapitulos);
             return res.status(201).json({
                 success: true,
                 message: 'Anime creado exitosamente',
                 data: newAnime
             });
         } catch (error) {
+            console.log(error)
             next(error);
         }
     }

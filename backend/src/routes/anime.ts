@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { AnimeController } from "../controllers/anime.controller";
 import { AnimeService } from "../services/anime.service";
+import { upload } from "../middlewares/multer.middleware";
 
 const animeRouter = Router();
 const animeService = new AnimeService();
 const animeController = new AnimeController(animeService);
 
-animeRouter.post("/", animeController.createAnime);
+animeRouter.post("/", upload.single('image'), animeController.createAnime);
 animeRouter.get("/:usuarioId", animeController.getAnimesByUserId);
 animeRouter.put("/:animeId", animeController.updateAnime);
 animeRouter.delete("/:animeId", animeController.deleteAnime);

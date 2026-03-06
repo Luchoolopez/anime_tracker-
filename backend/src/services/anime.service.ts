@@ -1,11 +1,21 @@
 import anime, {IAnime} from "../models/anime";
+import { StorageService } from "./storage.service";
+
+type UploadedFile = {
+    originalname: string;
+    mimetype: string;
+    buffer: Buffer;
+};
 
 export class AnimeService{
-    async createAnime(usuarioId:string, nombre:string, imagen:string, cantidadCapitulos:number){
+    private storageService = new StorageService();
+
+    async createAnime(usuarioId:string, nombre:string, file:UploadedFile, cantidadCapitulos:number){
+        const uploadResult = await this.storageService.uploadImage('anime_image', file);
         const newAnime = await anime.create({
             usuarioId,
             nombre,
-            imagen,
+            imagen: uploadResult.url,
             cantidadCapitulos,
         })
         return newAnime;
