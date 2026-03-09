@@ -4,6 +4,7 @@ import type { RegisterUserDTO, User } from "../types/user.type";
 
 interface AuthContextType {
     user: User | null;
+    userId:string | null;
     token: string | null;
     isReady: boolean;
     loading: boolean;
@@ -110,7 +111,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): React.ReactElemen
     };
 
     return(
-        <AuthContext.Provider value={{ user, token, isReady, loading, error, setError, login, register, logout }}>
+        <AuthContext.Provider value={{ user, userId:user?.userId || null, token, isReady, loading, error, setError, login, register, logout }}>
             {children}
         </AuthContext.Provider>
     );
