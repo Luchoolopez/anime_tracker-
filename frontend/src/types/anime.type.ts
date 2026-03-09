@@ -4,9 +4,11 @@ export interface Capitulo {
 }
 
 export interface Anime{
-    usuarioId: string | null;
+    _id: string;
+    usuarioId: string;
     nombre: string;
     imagen: string;
     cantidadCapitulos: number;
     capitulos: Capitulo[];
+    estado: 'no visto' | 'pendiente' | 'visto';
 }

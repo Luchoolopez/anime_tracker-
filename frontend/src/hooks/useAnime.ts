@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { AnimeService } from "../api/anime.service";
-import type { Anime, Capitulo } from "../types/anime.type";
+import type { Anime } from "../types/anime.type";
 import { useAuth } from "../context/authContext";
 
 export const useAnime = () => {
@@ -22,25 +22,26 @@ export const useAnime = () => {
         }
     }, []);
 
-    const createAnime = useCallback(async (animeData: Omit<Anime, 'id'>) => {
-        if(!userId)
+    const createAnime = useCallback(async (animeData: Omit<Anime, '_id'>) => {
+        if(!userId) return;
         setLoading(true);
         try {
-            const newAnime = await AnimeService.createAnime({ ...animeData, usuarioId: userId });
-            setAnimes([...animes, newAnime]);
+            const response = await AnimeService.createAnime({ ...animeData, usuarioId: userId });
+            const newAnime = response;
+            setAnimes( prev => [...prev, newAnime]);
             return newAnime;
         }catch(error){
             setError("Error al crear el anime");
         } finally {
             setLoading(false);
         }
-    }, [loadAnimes])
+    }, [userId]);
 
     const updateAnime = useCallback(async(animeId:string, animeData: Partial<Anime>) => {
         setLoading(true);
         try{
             const updatedAnime = await AnimeService.updateAnime(animeId, animeData);
-            setAnimes(animes.map(a => a.usuarioId === animeId ? updatedAnime : a));
+            setAnimes(animes.map(a => a._id === animeId ? updatedAnime : a));
         } catch (error) {
             setError("Error al actualizar el anime");
         } finally {
@@ -52,7 +53,7 @@ export const useAnime = () => {
         setLoading(true);
         try{
             await AnimeService.deleteAnime(animeId);
-            setAnimes(animes.filter(a => a.usuarioId !== animeId));
+            setAnimes(animes.filter(a => a._id !== animeId));
         }catch(error){
             setError("Error al eliminar el anime");
         } finally {

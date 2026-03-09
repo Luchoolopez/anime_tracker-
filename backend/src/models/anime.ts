@@ -11,6 +11,7 @@ export interface IAnime extends Document {
     imagen: string;
     cantidadCapitulos: number;
     capitulos: ICapitlo[];
+    estado: 'no visto' | 'pendiente' | 'visto';
 }
 
 const CapitulosSchema: Schema = new Schema({
@@ -25,7 +26,8 @@ const AnimeSchema: Schema = new Schema({
     nombre: { type: String, required: true },
     imagen: { type: String, default: 'https://via.placeholder.com/150' },
     cantidadCapitulos: { type: Number, required: true },
-    capitulos: [CapitulosSchema]
+    capitulos: [CapitulosSchema],
+    estado: { type: String, enum: ['no visto', 'pendiente', 'visto'], default: 'no visto' }
 }, {
     timestamps: true
 })
