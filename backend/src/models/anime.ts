@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface ICapitlo {
+export interface ICapitulo {
     numero: number;
     estado: 'no visto' | 'pendiente' | 'visto';
 }
@@ -10,7 +10,7 @@ export interface IAnime extends Document {
     nombre: string;
     imagen: string;
     cantidadCapitulos: number;
-    capitulos: ICapitlo[];
+    capitulos: ICapitulo[];
     estado: 'no visto' | 'pendiente' | 'visto';
 }
 
