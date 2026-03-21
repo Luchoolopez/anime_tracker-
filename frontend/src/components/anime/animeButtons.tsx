@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { useAnime } from "../../hooks/useAnime"
+import { useAnime } from "../../context/animeContext"
 import { Modal, Button } from "react-bootstrap";
 import { useAuth } from "../../context/authContext";
 import type { CreateAnimeDTO } from "../../types/anime.type";
 
 export const AnimeButtons = () => {
     const { user } = useAuth();
-    // 1. Desestructuramos "error" del hook
-    const { createAnime, updateAnime, deleteAnime, loadAnimes, error } = useAnime();
+    const { createAnime, error } = useAnime();
     const [animeData, setAnimeData] = useState<CreateAnimeDTO>({
         imagen: '',
         usuarioId: user ? user.userId : '',
@@ -19,7 +18,6 @@ export const AnimeButtons = () => {
         setAnimeData({ ...animeData, [e.target.name]: e.target.value });
     }
 
-    // 2. Nueva función específica para capturar la imagen (el archivo físico)
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             setAnimeData({ ...animeData, imagen: e.target.files[0] as any });
@@ -36,7 +34,6 @@ export const AnimeButtons = () => {
         e.preventDefault();
         try {
             await createAnime(animeData);
-            loadAnimes();
             handleClose();
         } catch (error) {
             console.error('Error al crear el anime:', error);
@@ -56,7 +53,7 @@ export const AnimeButtons = () => {
                     <Modal.Title>Crear nuevo Anime</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {/* 3. Le asignamos un ID al form para conectarlo con el botón de abajo */}
+                    {/* Le asignamos un ID al form para conectarlo con el botón de abajo */}
                     <form id="create-anime-form" onSubmit={handleCreateAnime}>
                         {error && (<div className="alert alert-danger p-2 text-center">{error}</div>)}
                         <div className="mb-3">

@@ -1,14 +1,9 @@
 import { Link, useParams } from "react-router-dom";
-import React, { useEffect } from "react";
-import { useAnime } from "../../hooks/useAnime";
+import React from "react";
+import { useAnime } from "../../context/animeContext";
 import type { Anime } from "../../types/anime.type";
 export const AnimePanel = () => {
-    const {animes, loading, error, loadAnimes} = useAnime();
-
-
-    useEffect(() => {
-        loadAnimes();
-    }, [loadAnimes]);
+    const {animes, loading, error} = useAnime();
 
     if(loading) return <div>Cargando...</div>;
     if(error) return <div>{error}</div>;
@@ -25,7 +20,6 @@ export const AnimePanel = () => {
                             <h3>{anime.nombre}</h3>
                         </Link>
                         <p>Estado: {anime.estado}</p>
-                        {/* Agrega más detalles si es necesario */}
                     </div>
                 ))}
             </div>

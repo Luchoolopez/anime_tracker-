@@ -80,7 +80,6 @@ export const AuthProvider = ({ children }: AuthProviderProps): React.ReactElemen
             setToken(accessToken);
             setUser(userData);
 
-            return userData;
         }catch(err){
             setError('Error al iniciar sesión. Verifica tus credenciales.');
             throw err;
