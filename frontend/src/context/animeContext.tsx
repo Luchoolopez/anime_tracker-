@@ -8,7 +8,7 @@ interface AnimeContextType {
     loading: boolean;
     error: string | null;
     loadAnimes: () => Promise<void>;
-    createAnime: (animeData: CreateAnimeDTO) => Promise<void>;
+    createAnime: (animeData: Omit<CreateAnimeDTO, 'usuarioId'>) => Promise<void>;
     updateAnime: (animeId: string, animeData: Partial<Anime>) => Promise<void>;
     deleteAnime: (animeId: string) => Promise<void>;
 }
@@ -52,7 +52,7 @@ export const AnimeProvider = ({ children }: { children: React.ReactNode }) => {
     }, [loadAnimes]);
 
 
-    const createAnime = useCallback(async (animeData: CreateAnimeDTO) => {
+    const createAnime = useCallback(async (animeData: Omit<CreateAnimeDTO, 'usuarioId'>) => {
         if (!userId) throw new Error("Usuario no autenticado");
 
         const formData = new FormData();
@@ -60,7 +60,7 @@ export const AnimeProvider = ({ children }: { children: React.ReactNode }) => {
         formData.append('cantidadCapitulos', animeData.cantidadCapitulos.toString());
         formData.append('usuarioId', userId); // Usar el userId del contexto, que es la fuente de verdad.
         if (animeData.imagen) {
-            formData.append('image', animeData.imagen);
+            formData.append('image', animeData.imagen as Blob);
         }
 
         setError(null);

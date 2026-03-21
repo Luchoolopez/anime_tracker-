@@ -7,20 +7,24 @@ import type { CreateAnimeDTO } from "../../types/anime.type";
 export const AnimeButtons = () => {
     const { user } = useAuth();
     const { createAnime, error } = useAnime();
-    const [animeData, setAnimeData] = useState<CreateAnimeDTO>({
-        imagen: '',
-        usuarioId: user ? user.userId : '',
+    const [animeData, setAnimeData] = useState({
         nombre: '',
         cantidadCapitulos: 0,
-    })
+        imagen: null as File | null,
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setAnimeData({ ...animeData, [e.target.name]: e.target.value });
-    }
+        const { name, value } = e.target;
+        setAnimeData(prev => ({
+            ...prev,
+            // Aseguramos que la cantidad de capítulos se guarde como número
+            [name]: name === 'cantidadCapitulos' ? (value === '' ? 0 : parseInt(value, 10)) : value
+        }));
+    };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
-            setAnimeData({ ...animeData, imagen: e.target.files[0] as any });
+            setAnimeData({ ...animeData, imagen: e.target.files[0] });
         }
     }
 
@@ -34,6 +38,12 @@ export const AnimeButtons = () => {
         e.preventDefault();
         try {
             await createAnime(animeData);
+            // Limpiamos el formulario tras el éxito
+            setAnimeData({
+                nombre: '',
+                cantidadCapitulos: 0,
+                imagen: null,
+            });
             handleClose();
         } catch (error) {
             console.error('Error al crear el anime:', error);
