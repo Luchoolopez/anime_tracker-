@@ -25,7 +25,7 @@ export const Login = () => {
         setError(null);
         try {
             await login(values.email, values.password);
-            navigate('/home', {
+            navigate('/', {
                 state: { successMessage: 'Inicio de sesión exitoso.' }
             });
         } catch (error) {

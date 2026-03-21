@@ -12,3 +12,10 @@ export interface Anime{
     capitulos: Capitulo[];
     estado: 'no visto' | 'pendiente' | 'visto';
 }
+
+export interface CreateAnimeDTO{
+    image:''
+    usuarioId: string;
+    nombre: string;
+    cantidadCapitulos: number;
+}

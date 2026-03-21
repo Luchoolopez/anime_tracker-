@@ -3,6 +3,7 @@ import { Login } from "../pages/login";
 import { Register } from "../pages/register";
 import { NotFoundPage } from "../pages/NotFoundPage";
 import { AnimeHome } from "../pages/animeHome";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 export function AppRouter() {
     return(
@@ -10,7 +11,15 @@ export function AppRouter() {
             <Route path="*" element={<NotFoundPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/home" element={<AnimeHome />} />
+            
+            <Route 
+                path="/" 
+                element={
+                    <ProtectedRoute>
+                        <AnimeHome />
+                    </ProtectedRoute>
+                } 
+            />
         </Routes>
     )
 }

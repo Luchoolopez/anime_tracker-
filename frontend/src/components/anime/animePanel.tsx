@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import React, { useEffect } from "react";
-import { useAnime } from "../hooks/useAnime";
-import type { Anime } from "../types/anime.type";
+import { useAnime } from "../../hooks/useAnime";
+import type { Anime } from "../../types/anime.type";
 export const AnimePanel = () => {
     const {animes, loading, error, loadAnimes} = useAnime();
 
