@@ -14,7 +14,7 @@ export interface Anime{
 }
 
 export interface CreateAnimeDTO{
-    image:''
+    imagen?: File | string;
     usuarioId: string;
     nombre: string;
     cantidadCapitulos: number;

@@ -2,8 +2,12 @@ import apiClient from "./apiClient"
 import type { Capitulo, Anime } from "../types/anime.type"
 
 export const AnimeService = {
-    createAnime: async (data: Omit<Anime, '_id'>) => {
-        const response = await apiClient.post("/anime", data);
+    createAnime: async (data: FormData) => {
+        const response = await apiClient.post("/anime", data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
         return response.data;
     },
 

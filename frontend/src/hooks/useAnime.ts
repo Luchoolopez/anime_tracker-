@@ -1,10 +1,11 @@
 import React, { useCallback } from "react";
 import { AnimeService } from "../api/anime.service";
-import type { Anime } from "../types/anime.type";
+import type { Anime, CreateAnimeDTO } from "../types/anime.type";
 import { useAuth } from "../context/authContext";
 
 export const useAnime = () => {
-    const { userId } = useAuth();
+    const { user } = useAuth();
+    const userId = user?.userId;
     const [animes, setAnimes] = React.useState<Anime[]>([]);
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
@@ -12,6 +13,7 @@ export const useAnime = () => {
     const loadAnimes = useCallback(async () => {
         if (!userId) return;
         setLoading(true);
+        setError(null);
         try {
             const response = await AnimeService.getAnimeByUserId(userId);
             setAnimes(response.data ?? []);
@@ -20,13 +22,21 @@ export const useAnime = () => {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [userId]);
 
-    const createAnime = useCallback(async (animeData: Omit<Anime, '_id'>) => {
+    const createAnime = useCallback(async (animeData: CreateAnimeDTO) => {
+        const formData = new FormData();
+        formData.append('nombre', animeData.nombre);
+        formData.append('cantidadCapitulos', animeData.cantidadCapitulos.toString());
+        formData.append('usuarioId', animeData.usuarioId);
+        if(animeData.imagen){
+            formData.append('image', animeData.imagen);
+        }
         if(!userId) return;
         setLoading(true);
+        setError(null);
         try {
-            const response = await AnimeService.createAnime({ ...animeData, usuarioId: userId });
+            const response = await AnimeService.createAnime(formData);
             const newAnime = response;
             setAnimes( prev => [...prev, newAnime]);
             return newAnime;
@@ -39,27 +49,29 @@ export const useAnime = () => {
 
     const updateAnime = useCallback(async(animeId:string, animeData: Partial<Anime>) => {
         setLoading(true);
+        setError(null);
         try{
             const updatedAnime = await AnimeService.updateAnime(animeId, animeData);
-            setAnimes(animes.map(a => a._id === animeId ? updatedAnime : a));
+            setAnimes(prev => prev.map(a => a._id === animeId ? updatedAnime : a));
         } catch (error) {
             setError("Error al actualizar el anime");
         } finally {
             setLoading(false);
         }
-    },[loadAnimes]);
+    }, []);
 
     const deleteAnime = useCallback(async(animeId:string) => {
         setLoading(true);
+        setError(null);
         try{
             await AnimeService.deleteAnime(animeId);
-            setAnimes(animes.filter(a => a._id !== animeId));
+            setAnimes(prev => prev.filter(a => a._id !== animeId));
         }catch(error){
             setError("Error al eliminar el anime");
         } finally {
             setLoading(false);
         }
-    },[loadAnimes]);
+    }, []);
 
     return {animes, loading, error, loadAnimes, createAnime, updateAnime, deleteAnime}
 }

@@ -6,13 +6,25 @@ import type { CreateAnimeDTO } from "../../types/anime.type";
 
 export const AnimeButtons = () => {
     const { user } = useAuth();
-    const { createAnime, updateAnime, deleteAnime, loadAnimes } = useAnime();
+    // 1. Desestructuramos "error" del hook
+    const { createAnime, updateAnime, deleteAnime, loadAnimes, error } = useAnime();
     const [animeData, setAnimeData] = useState<CreateAnimeDTO>({
-        image: '',
-        usuarioId: user!.userId,
+        imagen: '',
+        usuarioId: user ? user.userId : '',
         nombre: '',
         cantidadCapitulos: 0,
     })
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setAnimeData({ ...animeData, [e.target.name]: e.target.value });
+    }
+
+    // 2. Nueva función específica para capturar la imagen (el archivo físico)
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setAnimeData({ ...animeData, imagen: e.target.files[0] as any });
+        }
+    }
 
     // Estado para controlar si el modal está visible o no
     const [showModal, setShowModal] = useState(false);
@@ -44,10 +56,49 @@ export const AnimeButtons = () => {
                     <Modal.Title>Crear nuevo Anime</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <form onSubmit={handleCreateAnime}>
-                        {/* {error && (<div className="alert alert-danger p-2 text-center">{error}</div>)} */}
-                        
+                    {/* 3. Le asignamos un ID al form para conectarlo con el botón de abajo */}
+                    <form id="create-anime-form" onSubmit={handleCreateAnime}>
+                        {error && (<div className="alert alert-danger p-2 text-center">{error}</div>)}
+                        <div className="mb-3">
+                            <label htmlFor="nombre" className="text-black mb-1 fw-semibold" style={{ fontSize: '0.85rem' }}>Nombre</label>
+                            <input
+                                type="text"
+                                placeholder="steel ball run"
+                                name="nombre"
+                                value={animeData.nombre}
+                                onChange={handleChange}
+                                className="form-control text-black shadow-none"
+                                style={{ backgroundColor: '#e8edf3', border: 'none', padding: '12px' }}
+                                required
+                            />
+                        </div>
 
+                        <div className="mb-3">
+                            <label htmlFor="cantidadCapitulos" className="text-black mb-1 fw-semibold" style={{ fontSize: '0.85rem' }}>Cantidad de Capítulos</label>
+                            <input
+                                type="number"
+                                placeholder="12"
+                                name="cantidadCapitulos"
+                                value={animeData.cantidadCapitulos}
+                                onChange={handleChange}
+                                className="form-control text-black shadow-none"
+                                style={{ backgroundColor: '#e8edf3', border: 'none', padding: '12px' }}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="image" className="text-black mb-1 fw-semibold" style={{ fontSize: '0.85rem' }}>Imagen del Anime</label>
+                            <input
+                                type="file"
+                                name="image"
+                                onChange={handleImageChange}
+                                className="form-control text-black shadow-none"
+                                style={{ backgroundColor: '#e8edf3', border: 'none', padding: '12px' }}
+                                accept="image/*"
+                                required
+                            />
+                        </div>
 
 
                     </form>
@@ -57,7 +108,8 @@ export const AnimeButtons = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Cancelar
                     </Button>
-                    <Button variant="primary" onClick={handleClose}> {/* Aquí llamarás a createAnime */}
+                    {/* 4. Conectamos el botón al formulario mediante el 'id' y el tipo 'submit' */}
+                    <Button variant="primary" type="submit" form="create-anime-form">
                         Guardar
                     </Button>
                 </Modal.Footer>
